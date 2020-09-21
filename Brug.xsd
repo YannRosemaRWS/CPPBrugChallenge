@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="brug" type="brugType"/>
+    <xs:complexType name="brugType">
+        <xs:sequence maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="rijbaan" type="rijbaanType"/>
+        </xs:sequence>
+        <xs:attribute name="uuid" type="uuid" use="required"/>
+        <xs:attribute name="naam" type="xs:string" use="optional"/>
+        <xs:attribute name="lengte" type="meters" use="required"/>
+        <xs:attribute name="breedte" type="meters" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="rijbaanType">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="rijstrook" type="rijstrookType"/>
+        </xs:sequence>
+        <xs:attribute name="uuid" type="uuid" use="required"/>
+        <xs:attribute name="breedte" type="meters" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="rijstrookType">
+        <xs:attribute name="uuid" type="uuid" use="required"/>
+        <xs:attribute name="breedte" type="meters" use="required"/>
+        <xs:attribute name="verkeersSoort" type="verkeer" use="required"/>
+    </xs:complexType>
+    <xs:simpleType name="uuid">
+        <xs:restriction base="xs:string">
+            <xs:pattern
+                value="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"
+            />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="meters">
+        <xs:restriction base="xs:double">
+            <xs:minExclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="verkeer">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="fietsverkeer"/>
+            <xs:enumeration value="voetgangers"/>
+            <xs:enumeration value="autoverkeer"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

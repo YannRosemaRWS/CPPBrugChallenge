@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brug xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="5Bd0bce1-EcfD-f6Cc-3D33-dCbFcfbea3cE" naam="RkmuPYI0SicML3PjwaaZa" lengte="389222869.888" breedte="617189615.756">
+    <rijbaan uuid="ca46B6Eb-ceCF-a2d7-dc75-cF17EA8d748a" breedte="14735263.908">
+        <rijstrook uuid="EEBECE3A-fE7B-CedF-bae4-3F4edFbE28be" breedte="154978.492" verkeersSoort="autoverkeer"/>
+        <rijstrook uuid="a8cf2BEd-20Fa-7BCf-9caB-fBcAAbadC5bd" breedte="159273.564" verkeersSoort="voetgangers"/>
+    </rijbaan>
+    <rijbaan uuid="6BeFa27D-C8f0-2A7e-dF1A-A168A474CF1d" breedte="13141970.807">
+        <rijstrook uuid="8AecD9ED-ee3B-3aaA-3A8A-1e0fa96e1bec" breedte="176634.355" verkeersSoort="voetgangers"/>
+        <rijstrook uuid="4AEbb9C9-a6dF-d4c5-05Cd-b5029eBb18C2" breedte="143617.741" verkeersSoort="autoverkeer"/>
+    </rijbaan>
+</brug>
