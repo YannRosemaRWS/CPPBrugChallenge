@@ -189,7 +189,7 @@
         <EventManager SendIntegrationData="0" SendImageData="0" DataIntegrationInterval="60" ImageIntegrationInterval="1440"/>
     </ThermalQuality>
     <TiltSensorCalibration ParamsVersion="1" CameraHeight="2.10" CameraModel="ThermiCam2 390">
-        <Parameters Force="0" TiltAngle="34.330200" PanAngle="0.000000" RollAngle="0.000000" CcdWidth="0.010819" CcdHeight="0.008702" FocalDistance="7.500000"/>
+        <Parameters Force="0" TiltAngle="34.330200" PanAngle="30.000000" RollAngle="0.000000" CcdWidth="0.010819" CcdHeight="0.008702" FocalDistance="7.500000"/>
         <Corrections TiltAngle="0.000000"/>
     </TiltSensorCalibration>
     <WorldUtilities>
