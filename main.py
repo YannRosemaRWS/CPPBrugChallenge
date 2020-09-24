@@ -1,5 +1,3 @@
-# import requests
-# import asyncio
 import websocket
 import logging
 import json
@@ -10,7 +8,12 @@ logger.addHandler(logging.StreamHandler())
 
 def on_message(ws, message):
     logger.debug(f"Message received: {message}")
-    # print(f"{message}")
+    jsonMessage = json.loads(message)
+    if jsonMessage["type"] == "PedestrianPresence":
+        if jsonMessage["state"] == "Begin":
+            detectionZones[int(jsonMessage["zondId"])-1] = True
+        elif jsonMessage["state"] == "End":
+            detectionZones[int(jsonMessage["zondId"])-1] = False
 
 def on_open(ws):
     logger.debug(f"Opening websocket")
@@ -20,5 +23,7 @@ def on_open(ws):
     ws.send(request)
 
 if __name__ == "__main__":
-    ws = websocket.WebSocketApp('ws://10.0.0.26:13314/api/subscriptions', on_message = on_message,on_open=on_open)
+    detectionZones = [False]
+
+    ws = websocket.WebSocketApp('ws://10.0.0.26:13314/api/subscriptions', on_message=on_message, on_open=on_open)
     ws.run_forever()
