@@ -1,0 +1,9 @@
+version: '3'
+services:
+  canwebsocket:
+    container_name: canwebsocket
+    image: canwebsocket:latest
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    ports:
+      - "8765:8765"

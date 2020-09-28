@@ -1,0 +1,10 @@
+aenum==2.2.4
+autopep8==1.5.4
+filelock==3.0.12
+mypy-extensions==0.4.3
+pycodestyle==2.6.0
+pyserial==3.4
+python-can==4.0.0.dev0
+toml==0.10.1
+websockets==8.1
+wrapt==1.12.1
