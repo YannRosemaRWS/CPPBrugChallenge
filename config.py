@@ -347,7 +347,7 @@ def parseLidarData(lidarSchema:xmlschema.XMLSchema, lidarConfig:str):
     lidars = []
     for lidar in lidarConfigDict["lidar"]:
         try:
-            lidars.append(Lidar(lidar["@x"], lidar["@y"], lidar["@panAngle"], lidar["@numberOfBeams"], lidar["@baseFrameIdTx"]))
+            lidars.append(Lidar(lidar["@x"], lidar["@y"], lidar["@panAngle"], lidar["@numberOfBeams"], lidar["@baseFrameIdTx"], lidar['@viewAngle']))
         except Exception as e:
             raise DataParseError(lidar['@uuid'],e)
 

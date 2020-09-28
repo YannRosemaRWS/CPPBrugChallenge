@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lidars xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:noNamespaceSchemaLocation="file:////ad.rws.nl/p-dfs01/homes/rosemay/Lidar.xsd">
-    <lidar uuid="8aF70Bc7-AaeB-5eCf-4cdE-812eEC783AAE" x="1808848316.062" y="-1644422458.664" baseFrameIdTx="727795478"
-         panAngle="174.054" numberOfBeams="4" viewAngle="206.739"/>
-    <lidar uuid="a0AECbBE-E4eB-4570-cfdB-abDECC68cAb7" x="1936120460.564" y="1403839637.351" baseFrameIdTx="1267385818"
-         panAngle="66.673" numberOfBeams="9" viewAngle="255.32"/>
-    <lidar uuid="Fa6Cc4Bb-bAc5-EdFD-Dbf8-aaBd6eBA5aFa" x="1665367344.493" y="1398622528.787" baseFrameIdTx="1100565866"
-         panAngle="128.766" numberOfBeams="5" viewAngle="284.279"/>
+    <lidar uuid="8aF70Bc7-AaeB-5eCf-4cdE-812eEC783AAE" x="0" y="0" baseFrameIdTx="1872"
+         panAngle="45" numberOfBeams="8" viewAngle="45"/>
+    <lidar uuid="a0AECbBE-E4eB-4570-cfdB-abDECC68cAb7" x="1936120460.564" y="1403839637.351" baseFrameIdTx="1882"
+         panAngle="66.673" numberOfBeams="8" viewAngle="45"/>
+    <lidar uuid="Fa6Cc4Bb-bAc5-EdFD-Dbf8-aaBd6eBA5aFa" x="1665367344.493" y="1398622528.787" baseFrameIdTx="1892"
+         panAngle="128.766" numberOfBeams="8" viewAngle="45"/>
 </lidars>
