@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="lidars">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="lidar" type="lidarType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="lidarType">
+        <xs:attribute name="uuid" type="uuid" use="required"/>
+        <xs:attribute name="x" type="meters" use="required"/>
+        <xs:attribute name="y" type="meters" use="required"/>
+        <xs:attribute name="baseFrameIdTx" type="canId" use="required"/>
+        <xs:attribute name="panAngle" type="angle" use="required"/>
+        <xs:attribute name="numberOfBeams" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:int">
+                    <xs:minInclusive value="1"/>
+                    <xs:maxInclusive value="16"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="viewAngle" type="angle" use="required"/>
+    </xs:complexType>
+    <xs:simpleType name="meters">
+        <xs:restriction base="xs:float"/>
+    </xs:simpleType>
+    <xs:simpleType name="uuid">
+        <xs:restriction base="xs:string">
+            <xs:pattern
+                value="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"
+            />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="angle">
+        <xs:restriction base="xs:float">
+            <xs:minInclusive value="0"/>
+            <xs:maxExclusive value="360"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="canId">
+        <xs:restriction base="xs:int">
+            <xs:minExclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

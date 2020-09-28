@@ -4,6 +4,7 @@ import pprint
 import uuid as UUID
 import cameratransform as ct
 import numpy as np
+import math
 
 class DataParseError(Exception):
     """Exception raised for XML data parsing errors.
@@ -285,9 +286,75 @@ def parseIRData(configFile: str, frameSize: tuple):
     return irCamera
 
 
-if __name__ == "__main__":
-    
+class Lidar(Point):
+    def __init__(self, x: float, y:float, panAngle:float, segments:int, baseFrameIdTx:int, viewAngle:float):
+        super().__init__(x, y)
+        self.panAngle = panAngle
+        self.segments = segments
+        self.baseFrameIdTx = baseFrameIdTx
+        self.viewAngle = viewAngle
 
+    @property
+    def panAngle(self):
+        return self._panAngle
+
+    @panAngle.setter
+    def panAngle(self, p):
+        self._panAngle = p
+    
+    @property
+    def segments(self):
+        return self._segments
+
+    @segments.setter
+    def segments(self, s):
+        self._segments = s
+
+    @property
+    def baseFrameIdTx(self):
+        return self._baseFrameIdTx
+
+    @baseFrameIdTx.setter
+    def baseFrameIdTx(self, b):
+        self._baseFrameIdTx = b
+
+    @property
+    def viewAngle(self):
+        return self._viewAngle
+
+    @viewAngle.setter
+    def viewAngle(self, v):
+        self._viewAngle = v
+
+    def beamToCartesian(self, beamNumber: int, distance:float):
+        segmentAngle = self.viewAngle/self.segments
+        angle1 = (beamNumber-5)*segmentAngle + self.panAngle
+        angle2 = (beamNumber-4)*segmentAngle + self.panAngle
+        x1 = distance*math.sin(math.radians(angle1))
+        y1 = distance*math.cos(math.radians(angle1))
+        point1 = (x1 + self.x, y1 + self.y)
+        x2 = distance*math.sin(math.radians(angle2))
+        y2 = distance*math.cos(math.radians(angle2))
+        point2 = (x2 + self.x, y2 + self.y)
+
+        line = Polygon([point1,point2,point1,point2])
+        return line
+
+
+def parseLidarData(lidarSchema:xmlschema.XMLSchema, lidarConfig:str):
+    lidarConfigDict = lidarSchema.to_dict(lidarConfig)
+
+    lidars = []
+    for lidar in lidarConfigDict["lidar"]:
+        try:
+            lidars.append(Lidar(lidar["@x"], lidar["@y"], lidar["@panAngle"], lidar["@numberOfBeams"], lidar["@baseFrameIdTx"]))
+        except Exception as e:
+            raise DataParseError(lidar['@uuid'],e)
+
+    return lidars
+        
+
+if __name__ == "__main__":
     brugSchema = xmlschema.XMLSchema('Brug.xsd')
     brugConfig = 'brugConfig.xml'
     if brugSchema.is_valid(brugConfig):
@@ -297,5 +364,8 @@ if __name__ == "__main__":
     irCamera = parseIRData('irConfig.xml',(320,240))
 
     lidarSchema = xmlschema.XMLSchema('Lidar.xsd')
-    lidarSchema.is_valid('lidarConfig.xml')
+    lidarConfig = 'lidarConfig.xml'
+    if lidarSchema.is_valid(lidarConfig):
+        lidars = parseLidarData(lidarSchema, lidarConfig)
 
+    print(f"done!")
