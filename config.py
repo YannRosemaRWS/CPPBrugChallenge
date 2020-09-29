@@ -45,8 +45,9 @@ class Point(object):
         pass
 
 class Polygon(object):
-    def __init__(self, points:list):
+    def __init__(self, points:list, objectId:dict = None):
         self.points = points
+        self.objectId = objectId
 
     @property
     def points(self):
@@ -55,6 +56,14 @@ class Polygon(object):
     @points.setter
     def points(self, points):
         self._points = points
+
+    @property
+    def objectId(self):
+        return self._objectId
+    
+    @objectId.setter
+    def objectId(self, o):
+        self._objectId = o
 
     def draw(self):
         pass
@@ -211,8 +220,12 @@ class IRCamera(Point):
             detectionZone.points = self.cam.spaceFromImage(np.array(detectionZone.shapePx))
         self.detectionZones.append(detectionZone)
 
+    def shapeToSpace(self, detectionZone):
+        shapeSpace = self.cam.spaceFromImage(np.array(detectionZone.shapePx))
+        return shapeSpace
+
 class IRDetectionZone(Polygon):
-    def __init__(self, shapePx: list, mode: dict, zoneId: str, shape: list = []):
+    def __init__(self, shapePx: list, mode: dict, zoneId: int, shape: list = []):
         super().__init__(shape)
         self.shapePx = shapePx
         self.mode = mode
@@ -241,6 +254,7 @@ class IRDetectionZone(Polygon):
     @zoneId.setter
     def zoneId(self, zoneId):
         self._zoneId = zoneId
+
 
 def parseIRData(configFile: str, frameSize: tuple):
     # Parse xml
@@ -281,7 +295,7 @@ def parseIRData(configFile: str, frameSize: tuple):
             shape = list(tuple(int(value) for value in point.attrib.values()) for point in points)
             mode = Zone.find('DetectionMode').attrib
             # Create IRDetectionZone
-            irDetectionZone = IRDetectionZone(shape, mode, Zone.get('ZoneId'))
+            irDetectionZone = IRDetectionZone(shape, mode, int(Zone.get('ZoneId')))
             # Add zone to IRCamera
             irCamera.addDetectionZone(irDetectionZone)
 
