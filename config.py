@@ -265,7 +265,9 @@ def parseIRData(configFile: str, frameSize: tuple):
             ct.SpatialOrientation(elevation_m=CameraHeight,
                                     tilt_deg=90.0-TiltAngle,
                                     roll_deg=RollAngle,
-                                    heading_deg=PanAngle))
+                                    heading_deg=PanAngle,
+                                    pos_x_m=None,
+                                    pos_y_m=None))
     # Get unique camera name
     cameraName = root.find('General').find('CameraName').get('Value')
     # Create IRCamera object

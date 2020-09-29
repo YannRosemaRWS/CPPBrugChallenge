@@ -3,8 +3,10 @@ import logging
 import json
 import config
 import xmlschema
+import asyncio
+import websockets
 
-logger = logging.getLogger('websockets')
+logger = logging.getLogger('detectie')
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler())
 
@@ -33,54 +35,116 @@ class DetectionFrame(object):
         self._numDetections = n
 
 
-def on_message(ws, message):
+# def on_message(ws, message):
+#     global detectionZones
+#     logger.debug(f"Message received: {message}")
+#     jsonMessage = json.loads(message)
+#     if jsonMessage["type"] == "PedestrianPresence":
+#         if jsonMessage["state"] == "Begin":
+#             detectionZones[int(jsonMessage["zondId"])-1] = True
+#         elif jsonMessage["state"] == "End":
+#             detectionZones[int(jsonMessage["zondId"])-1] = False
+
+
+# def on_open(ws):
+#     logger.debug(f"Opening websocket")
+#     logger.debug(f"Creating request")
+#     request = json.dumps({"messageType": "Subscription", "subscription": {
+#                          "type": "Event", "action": "Subscribe"}})
+#     logger.debug(f"Sending request: {request}")
+#     ws.send(request)
+
+
+# def canMessageParse(ws, message):
+#     global frameIDs, segmentIDs, detectionFrame, lidars
+#     # logger.debug(f"Message received: {message}")
+#     jsonMessage = json.loads(message)
+#     dataBytes = bytearray.fromhex(jsonMessage["data"])
+#     if jsonMessage["arbitration_id"] in frameIDs:
+#         numDetections = int.from_bytes(dataBytes[0:1], 'little')
+#         detectionFrame = DetectionFrame(
+#             jsonMessage["arbitration_id"]-1, numDetections, 8)
+#     elif jsonMessage["arbitration_id"] in segmentIDs:
+#         # distance
+#         distance = int.from_bytes(dataBytes[0:2], 'little')
+#         # valid
+#         valid = int.from_bytes(dataBytes[4:6], 'little')
+#         # channel number
+#         channel = int.from_bytes(dataBytes[6:8], 'little')
+#         if valid == 1:
+#             detectionFrame.detections[channel] = distance
+
+#             for lidar in lidars:
+#                 if lidar.baseFrameIdTx == jsonMessage["arbitration_id"]-2:
+#                     logger.debug(f"{lidar.beamToCartesian(channel, distance).points}")
+#         else:
+#             detectionFrame.detections[channel] = -1
+#         if len(list(x for x in detectionFrame.detections if x is not None)) == detectionFrame.numDetections:
+#             logger.debug(
+#                 f"{detectionFrame.baseID} : {detectionFrame.detections}")
+
+
+async def main():
+    canWebsocketFuture = asyncio.ensure_future(canWebsocket())
+    irWebsocketFuture = asyncio.ensure_future(irWebsocket())
+
+    done, pending = await asyncio.wait([canWebsocketFuture,irWebsocketFuture], return_when=asyncio.FIRST_COMPLETED)
+
+    for task in pending:
+        task.cancel()
+
+
+async def irWebsocket():
     global detectionZones
-    logger.debug(f"Message received: {message}")
-    jsonMessage = json.loads(message)
-    if jsonMessage["type"] == "PedestrianPresence":
-        if jsonMessage["state"] == "Begin":
-            detectionZones[int(jsonMessage["zondId"])-1] = True
-        elif jsonMessage["state"] == "End":
-            detectionZones[int(jsonMessage["zondId"])-1] = False
+    uri = "ws://10.0.0.26:13314/api/subscriptions"
+    async with websockets.connect(uri) as ws:
+        logger.debug(f"Opening websocket")
+        logger.debug(f"Creating request")
+        request = json.dumps({"messageType": "Subscription", "subscription": {
+                            "type": "Event", "action": "Subscribe"}})
+        logger.debug(f"Sending request: {request}")
+        await ws.send(request)
+        message = await ws.recv()
+        logger.debug(f"Request response: {message}")
+        while True:
+            message = await ws.recv()
+            logger.debug(f"Message received: {message}")
+            jsonMessage = json.loads(message)
+            if jsonMessage["type"] == "PedestrianPresence":
+                if jsonMessage["state"] == "Begin":
+                    detectionZones[int(jsonMessage["zoneId"])-1] = True
+                elif jsonMessage["state"] == "End":
+                    detectionZones[int(jsonMessage["zoneId"])-1] = False
 
 
-def on_open(ws):
-    logger.debug(f"Opening websocket")
-    logger.debug(f"Creating request")
-    request = json.dumps({"messageType": "Subscription", "subscription": {
-                         "type": "Event", "action": "Subscribe"}})
-    logger.debug(f"Sending request: {request}")
-    ws.send(request)
-
-
-def canMessageParse(ws, message):
+async def canWebsocket():
     global frameIDs, segmentIDs, detectionFrame, lidars
-    # logger.debug(f"Message received: {message}")
-    jsonMessage = json.loads(message)
-    dataBytes = bytearray.fromhex(jsonMessage["data"])
-    if jsonMessage["arbitration_id"] in frameIDs:
-        numDetections = int.from_bytes(dataBytes[0:1], 'little')
-        detectionFrame = DetectionFrame(
-            jsonMessage["arbitration_id"]-1, numDetections, 8)
-    elif jsonMessage["arbitration_id"] in segmentIDs:
-        # distance
-        distance = int.from_bytes(dataBytes[0:2], 'little')
-        # valid
-        valid = int.from_bytes(dataBytes[4:6], 'little')
-        # channel number
-        channel = int.from_bytes(dataBytes[6:8], 'little')
-        if valid == 1:
-            detectionFrame.detections[channel] = distance
+    uri = "ws://192.168.1.58:8765"
+    async with websockets.connect(uri) as ws:
+        while True:
+            message = await ws.recv()
+            logger.debug(f"Message received: {message}")
+            jsonMessage = json.loads(message)
+            dataBytes = bytearray.fromhex(jsonMessage["data"])
+            if jsonMessage["arbitration_id"] in frameIDs:
+                numDetections = int.from_bytes(dataBytes[0:1], 'little')
+                detectionFrame = DetectionFrame(
+                    jsonMessage["arbitration_id"]-1, numDetections, 8)
+            elif jsonMessage["arbitration_id"] in segmentIDs:
+                # distance
+                distance = int.from_bytes(dataBytes[0:2], 'little')
+                # valid
+                valid = int.from_bytes(dataBytes[4:6], 'little')
+                # channel number
+                channel = int.from_bytes(dataBytes[6:8], 'little')
+                if valid == 1:
+                    # detectionFrame.detections[channel] = distance
 
-            for lidar in lidars:
-                if lidar.baseFrameIdTx == jsonMessage["arbitration_id"]-2:
-                    logger.debug(f"{lidar.beamToCartesian(channel, distance).points}")
-        else:
-            detectionFrame.detections[channel] = -1
-        if len(list(x for x in detectionFrame.detections if x is not None)) == detectionFrame.numDetections:
-            logger.debug(
-                f"{detectionFrame.baseID} : {detectionFrame.detections}")
-
+                    for lidar in lidars:
+                        if lidar.baseFrameIdTx == jsonMessage["arbitration_id"]-2:
+                            logger.debug(f"{lidar.beamToCartesian(channel, distance).points}")
+                # else:
+                    # detectionFrame.detections[channel] = -1
 
 if __name__ == "__main__":
     logger.debug(f"Start config...")
@@ -130,6 +194,8 @@ if __name__ == "__main__":
     #     'ws://10.0.0.26:13314/api/subscriptions', on_message=on_message, on_open=on_open)
     # ws.run_forever()
 
-    wsCan = websocket.WebSocketApp(
-        'ws://192.168.1.58:8765', on_message=canMessageParse)
-    wsCan.run_forever()
+    # wsCan = websocket.WebSocketApp(
+    #     'ws://192.168.1.58:8765', on_message=canMessageParse)
+    # wsCan.run_forever()
+
+    asyncio.get_event_loop().run_until_complete(main())
