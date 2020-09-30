@@ -83,9 +83,9 @@
             <Zones>
                 <Zone Angle="119" Delay="0.0" Direction="3" Extend="0.0" ZoneId="1" ZoneName="" ZoneType="0">
                     <Shape Type="ARROWDIRECTION">
-                        <Point X="62" Y="161"/>
-                        <Point X="202" Y="102"/>
-                        <Point X="296" Y="190"/>
+                        <Point X="41" Y="49"/>
+                        <Point X="87" Y="33"/>
+                        <Point X="181" Y="244"/>
                         <Point X="119" Y="269"/>
                     </Shape>
                     <DetectionMode Humans="1" ObjectsOfInterest="1" Vehicles="0"/>
@@ -159,7 +159,7 @@
         <EventManager DataIntegrationInterval="60" ImageIntegrationInterval="1440" SendImageData="0" SendIntegrationData="0"/>
     </ThermalQuality>
     <TiltSensorCalibration CameraHeight="2.10" CameraModel="ThermiCam2 390" ParamsVersion="1">
-        <Parameters Force="0" TiltAngle="34.071602" PanAngle="30.000000" RollAngle="-1.660280" CcdWidth="0.010819" CcdHeight="0.008702" FocalDistance="7.500000"/>
+        <Parameters Force="0" TiltAngle="34.840900" PanAngle="30.000000" RollAngle="-0.280859" CcdWidth="0.010819" CcdHeight="0.008702" FocalDistance="7.500000"/>
         <Corrections TiltAngle="0.000000"/>
     </TiltSensorCalibration>
     <WorldUtilities>

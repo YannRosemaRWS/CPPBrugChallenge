@@ -4,6 +4,7 @@ import config
 import xmlschema
 import asyncio
 import websockets
+import numpy as np
 
 logger = logging.getLogger('detectie')
 logger.setLevel(logging.INFO)
@@ -102,8 +103,7 @@ async def irWebsocket():
                     for detectionZone in irCamera.detectionZones:
                         if detectionZone.zoneId == int(jsonMessage["zoneId"]):
                             if jsonMessage["state"] == "Begin":
-                                shapeSpace = irCamera.shapeToSpace(
-                                    detectionZone)
+                                shapeSpace = np.flip(irCamera.shapeToSpace(detectionZone)[:,0:2],1)
                                 polygonSpace = config.Polygon(list(tuple(x) for x in shapeSpace), objectId={
                                     "type": "ir", "id": detectionZone.zoneId})
                                 await showShape(polygonSpace)
@@ -115,7 +115,7 @@ async def irWebsocket():
 
 async def canWebsocket():
     global frameIDs, segmentIDs, lidars
-    uri = "ws://192.168.1.58:8765"
+    uri = "ws://192.168.1.100:8765"
     detectionFrame = None
     async with websockets.connect(uri) as ws:
         while True:
