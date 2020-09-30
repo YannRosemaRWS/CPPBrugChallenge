@@ -68,13 +68,19 @@ class Polygon(object):
     def draw(self):
         pass
 
+    def toJSON(self):
+        jsonPoints = []
+        for point in self.points:
+            jsonPoints.append({'x': point[0], 'y':point[1]})
+        return {'points':jsonPoints, 'objectId':self.objectId}
+
 class Rectangle(Polygon):
     def __init__(self, length:float, width:float, x:float, y:float):
         self.length = length
         self.width = width
         self.x = x
         self.y = y
-        points = [(x, y), (x + width, y), (x, y + length), (x + width, y + length)]
+        points = [(x, y), (x + width, y), (x + width, y + length),(x, y + length)]
         super().__init__(points)
 
     @property
@@ -105,6 +111,7 @@ class Brug(Rectangle):
         self.uuid = uuid
         self.name = name
         self.rijbanen = []
+        self.objectId = {'type':'brug', 'id':None}
 
     @property
     def uuid(self):
@@ -125,6 +132,11 @@ class Brug(Rectangle):
     def addRijbaan(self, rijbaan):
         self.rijbanen.append(rijbaan)
 
+    def toJSON(self):
+        jsonMsg = super().toJSON()
+        jsonMsg['rijbanen'] = [rijbaan.toJSON() for rijbaan in self.rijbanen]
+        return jsonMsg
+
 class Rijbaan(Rectangle):
     def __init__(self, brug:Brug, width:float, x:float, y:float, uuid:UUID.UUID):
         super().__init__(brug.length, width, x, y)
@@ -141,6 +153,11 @@ class Rijbaan(Rectangle):
 
     def addRijstrook(self, rijstrook):
         self.rijstroken.append(rijstrook)
+
+    def toJSON(self):
+        jsonMsg = super().toJSON()
+        jsonMsg['rijstroken'] = [rijstrook.toJSON() for rijstrook in self.rijstroken]
+        return jsonMsg
 
 class Rijstrook(Rectangle):
     def __init__(self, rijbaan:Rijbaan, width:float, x:float, y:float, uuid:UUID.UUID, trafficType:str):
@@ -185,11 +202,11 @@ def parseBrugData(brugSchema:xmlschema.XMLSchema, brugConfig:str):
     brug = Brug(brugConfigDict['@lengte'],brugConfigDict['@breedte'],brugConfigDict['@uuid'],brugConfigDict['@naam'])
     # Rijbanen aanmaken
     for rijbaan in brugConfigDict['rijbaan']:
-        rb = Rijbaan(brug,rijbaan['@breedte'],0,sum(x.width for x in brug.rijbanen),rijbaan['@uuid'])
+        rb = Rijbaan(brug,rijbaan['@breedte'],sum(x.width for x in brug.rijbanen),0,rijbaan['@uuid'])
         brug.addRijbaan(rb)
         # Rijstroken aanmaken
         for rijstrook in rijbaan['rijstrook']:
-            rb.addRijstrook(Rijstrook(rb,rijstrook['@breedte'],0,sum(x.width for x in rb.rijstroken)+rb.y,rijstrook['@uuid'],rijstrook['@verkeersSoort']))
+            rb.addRijstrook(Rijstrook(rb,rijstrook['@breedte'],sum(x.width for x in rb.rijstroken)+rb.x,0,rijstrook['@uuid'],rijstrook['@verkeersSoort']))
     return brug
 
 class IRCamera(Point):
@@ -365,7 +382,7 @@ class Lidar(Point):
         y2 = distance*math.cos(math.radians(angle2))
         point2 = (x2 + self.x, y2 + self.y)
 
-        line = Polygon([point1,point2,point1,point2])
+        line = Polygon([point1,point2,point2,point1])
         return line
 
 

@@ -1,7 +1,60 @@
 <Configuration>
+    <MetaData Name="Default"/>
+    <General GPSPosition="" Locale="EU" OverlayText="" ParamsVersion="1" Snmp="" TemperatureThreshold="60.0">
+        <Characteristics>
+            <Characteristic Name="x" Value="0"/>
+            <Characteristic Name="y" Value="0"/>
+        </Characteristics>
+        <CameraName Value="10-7430 S/N:425759">
+            <Display Channel="1" Id="1" X="21" Y="1"/>
+        </CameraName>
+        <IpAddress>
+            <Display Channel="0" Id="1" X="35" Y="1"/>
+        </IpAddress>
+        <Clock>
+            <Display Channel="1" Id="1" X="24" Y="1"/>
+        </Clock>
+        <VersionInfo>
+            <Display Channel="1" Id="1" X="1" Y="2"/>
+        </VersionInfo>
+        <BlankingZones/>
+        <Ntp ParamsVersion="1" ServerName="" TimeZone="28"/>
+    </General>
+    <IO>
+        <Outputs DetectionLed="1" OpenUnassignedOutputs="1" ParamsVersion="2" PulseEventsOffTime="10" PulseEventsTime="100">
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="1" PulseMode="0" PulseTime="40">
+                <Events>
+                    <Event Type="BadVideo">
+                        <DetailsCombinations/>
+                    </Event>
+                </Events>
+            </Output>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="2" PulseMode="0" PulseTime="40">
+                <Events>
+                    <Event Type="BadVideo">
+                        <DetailsCombinations/>
+                    </Event>
+                </Events>
+            </Output>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="3" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="4" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="5" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="6" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="7" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="8" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="9" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="10" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="11" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="12" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="13" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="14" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="15" PulseMode="0" PulseTime="40"/>
+            <Output CloseOnEvent="1" LogicalRelation="1" Number="16" PulseMode="0" PulseTime="40"/>
+        </Outputs>
+    </IO>
     <AGCParameters>
-        <HistoAGC UseDefaults="1" OutlierPromille="10" OutlierMultiplierPercentageLow="100" OutlierMultiplierPercentageHigh="10" PlatteauPromille="3" AdaptivePlateauClipping="1" UseAlgoFFCCompensation="1" LinearContribution="0" RangeShiftThresholdPercentage="10" SSOPercentage="10" UpdatePeriod="1" FFCRelearnPeriod="5">
-            <Roi X="19" Y="14" Width="331" Height="266"/>
+        <HistoAGC AdaptivePlateauClipping="1" FFCRelearnPeriod="5" LinearContribution="0" OutlierMultiplierPercentageHigh="10" OutlierMultiplierPercentageLow="100" OutlierPromille="10" PlatteauPromille="3" RangeShiftThresholdPercentage="10" SSOPercentage="10" UpdatePeriod="1" UseAlgoFFCCompensation="1" UseDefaults="1">
+            <Roi Height="266" Width="331" X="19" Y="14"/>
         </HistoAGC>
     </AGCParameters>
     <Acyclica Enabled="0">
@@ -12,131 +65,44 @@
         </Config>
     </Acyclica>
     <Codec>
-        <Codec ParamsVersion="1" Decoding="0">
-            <Display X="0" Y="0" Channel="0" Id="1"/>
+        <Codec Decoding="0" ParamsVersion="1">
+            <Display Channel="0" Id="1" X="0" Y="0"/>
         </Codec>
     </Codec>
-    <General ParamsVersion="1" DefaultGateway="1" SubnetMask="1" Locale="EU" TemperatureThreshold="60.0">
-        <Characteristics>
-            <Characteristic Name="x" Value="0"/>
-            <Characteristic Name="y" Value="0"/>
-        </Characteristics>
-        <CameraName Value="10-7430 S/N:425759">
-            <Display X="21" Y="1" Channel="1" Id="1"/>
-        </CameraName>
-        <IpAddress Value="1">
-            <Display X="35" Y="1" Channel="0" Id="1"/>
-        </IpAddress>
-        <Clock>
-            <Display X="24" Y="1" Channel="1" Id="1"/>
-        </Clock>
-        <VersionInfo>
-            <Display X="1" Y="2" Channel="1" Id="1"/>
-        </VersionInfo>
-        <Ntp ParamsVersion="1" ServerName="" TimeZone="28"/>
-        <OverlayText ParamsVersion="1" Font="Medium" PaintType="Full"/>
-    </General>
-    <IO ParamsVersion="1">
-        <Outputs ParamsVersion="2" PulseEventsTime="100" PulseEventsOffTime="10" OpenUnassignedOutputs="1" DetectionLed="1">
-            <Output Number="1" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events>
-                    <Event Type="BadVideo">
-                        <DetailsCombinations/>
-                    </Event>
-                    <Event Type="PedestrianPresence">
-                        <DetailsCombinations>
-                            <DetailsCombination ZoneId="1"/>
-                        </DetailsCombinations>
-                    </Event>
-                </Events>
-            </Output>
-            <Output Number="2" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events>
-                    <Event Type="BadVideo">
-                        <DetailsCombinations/>
-                    </Event>
-                </Events>
-            </Output>
-            <Output Number="3" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="4" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="5" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="6" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="7" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="8" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="9" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="10" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="11" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="12" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="13" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="14" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="15" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-            <Output Number="16" CloseOnEvent="1" LogicalRelation="1" PulseMode="0" PulseTime="40">
-                <Events/>
-            </Output>
-        </Outputs>
-    </IO>
     <MPEG4Stream RtspServerPort="554">
-        <MPEG4StreamParameter Camera="1" StreamName="" Codec="H264" FrameRate="29.97" Quality="80" RateControl="1" EncodingBitRate="2.00" KeyFrameInterval="30" ManualKeyFrameQuality="0" KeyFrameQuality="85"/>
-        <MPEG4StreamParameter2 Camera="1" StreamName="" Codec="H264" FrameRate="29.97" Quality="80" RateControl="1" EncodingBitRate="10.00" KeyFrameInterval="30" ManualKeyFrameQuality="0" KeyFrameQuality="85"/>
+        <MPEG4StreamParameter Camera="1" Codec="H264" EncodingBitRate="2.00" FrameRate="29.97" KeyFrameInterval="30" KeyFrameQuality="85" ManualKeyFrameQuality="0" Quality="80" RateControl="1" StreamName=""/>
+        <MPEG4StreamParameter2 Camera="1" Codec="H264" EncodingBitRate="10.00" FrameRate="29.97" KeyFrameInterval="30" KeyFrameQuality="85" ManualKeyFrameQuality="0" Quality="80" RateControl="1" StreamName=""/>
     </MPEG4Stream>
-    <MetaData Name="Default"/>
     <PedestrianCalibration>
-        <PedestrianCalibration HumanHeight="180" HumanWidth="50" HumanDepth="40" SubSample="3" UseTimings="0">
+        <PedestrianCalibration HumanDepth="40" HumanHeight="180" HumanWidth="50" SubSample="3" UseTimings="0">
             <Display Channel="0" ProgressChannel="0"/>
         </PedestrianCalibration>
     </PedestrianCalibration>
     <PedestrianPresence>
-        <PedestrianPresence SensitivityLevel="Ultra" UseDebugInfo="0" ShowGPSData="0" UseLimitedDebugInfo="0" UseTimings="0" ShowDetection="1" SendTrackingData="0" MaxTimeStoppedUpdates="400" NoStoppedObjectAgainstMaskingZone="0" UseDebugZoneCounting="0" EnableTemplateSuppressor="1" FastRemoveOnBorderThreshold="7" MaxNumEmptyUpdates="10">
-            <ForegroundBackground MotionDistance="5" MotionHistory="8" ForegroundThreshold="40" BackgroundUpdateStep="3" ReinitializeAfterFFC="13"/>
-            <Display Channel="1" ZoneName="0">
-                <ZoneOccupancy X="10" Y="1" Channel="1"/>
-            </Display>
+        <PedestrianPresence EnableTemplateSuppressor="1" FastRemoveOnBorderThreshold="7" MaxNumEmptyUpdates="10" MaxTimeStoppedUpdates="400" NoStoppedObjectAgainstMaskingZone="0" SendTrackingData="0" SensitivityLevel="Ultra" ShowDetection="1" ShowGPSData="0" UseDebugInfo="0" UseDebugZoneCounting="0" UseLimitedDebugInfo="0" UseTimings="0">
             <Zones>
-                <Zone ZoneId="1" ZoneName="" Direction="3" Angle="90" ZoneType="0" Delay="0.0" Extend="0.0">
+                <Zone Angle="119" Delay="0.0" Direction="3" Extend="0.0" ZoneId="1" ZoneName="" ZoneType="0">
                     <Shape Type="ARROWDIRECTION">
-                        <Point X="113" Y="219"/>
-                        <Point X="161" Y="203"/>
-                        <Point X="174" Y="220"/>
-                        <Point X="123" Y="240"/>
+                        <Point X="62" Y="161"/>
+                        <Point X="202" Y="102"/>
+                        <Point X="296" Y="190"/>
+                        <Point X="119" Y="269"/>
                     </Shape>
-                    <Characteristics/>
-                    <DetectionMode Humans="1" Vehicles="0" ObjectsOfInterest="1"/>
+                    <DetectionMode Humans="1" ObjectsOfInterest="1" Vehicles="0"/>
                     <Direction ApproachAngle="90" MaxSpeed="5.0"/>
-                    <Waiting TimeOut="2.0" WaitingAreaWidth="0.5"/>
-                    <ZoneOccupancy UseOccupancy="0" Threshold1="25" Threshold2="50" Threshold3="75"/>
+                    <Waiting TimeOut="1.0" WaitingAreaWidth="0.5"/>
+                    <ZoneOccupancy Threshold1="25" Threshold2="50" Threshold3="75" UseOccupancy="0"/>
                 </Zone>
             </Zones>
+            <ForegroundBackground BackgroundUpdateStep="3" ForegroundThreshold="40" MotionDistance="5" MotionHistory="8" ReinitializeAfterFFC="13"/>
             <EventManager Adept="0" IntegrationPeriod="1"/>
+            <Display Channel="1" ZoneName="0">
+                <ZoneOccupancy Channel="1" X="10" Y="1"/>
+            </Display>
         </PedestrianPresence>
-        <DataEventManager SendPedestrianData="1" IntegrationPeriod="60">
+        <DataEventManager IntegrationPeriod="60" SendPedestrianData="1">
             <Display>
-                <RealTimeData X="0" Y="0" Channel="0"/>
+                <RealTimeData Channel="0" X="0" Y="0"/>
             </Display>
         </DataEventManager>
     </PedestrianPresence>
@@ -177,23 +143,23 @@
         </ProductSecurity>
     </ProductSecurity>
     <SensorTau>
-        <SensorTau ParamsVersion="1" AGCFilterToggling="1" AGCFilterFreezeFrames="3" AGCFilterUpdateStep="1" AGCResetFrames="3" AGCFilterAmountOfConsecutiveUpdateSteps="1" ManualFFC="0" FFCIntervalInMinutes="4">
+        <SensorTau AGCFilterAmountOfConsecutiveUpdateSteps="1" AGCFilterFreezeFrames="3" AGCFilterToggling="1" AGCFilterUpdateStep="1" AGCResetFrames="3" FFCIntervalInMinutes="4" ManualFFC="0" ParamsVersion="1">
             <Display Channel="0"/>
         </SensorTau>
     </SensorTau>
     <SystemLog>
-        <Events Enabled="1" MinLevel="1" MaxLevel="5"/>
-        <RAM-Storage Enabled="1" MinLevel="4" MaxLevel="5" BufferSize="100000"/>
-        <Flash-Storage Enabled="1" MinLevel="5" MaxLevel="5" BufferSize="10000"/>
+        <Events Enabled="1" MaxLevel="5" MinLevel="1"/>
+        <RAM-Storage BufferSize="100000" Enabled="1" MaxLevel="5" MinLevel="4"/>
+        <Flash-Storage BufferSize="10000" Enabled="1" MaxLevel="5" MinLevel="5"/>
     </SystemLog>
     <ThermalQuality>
-        <ThermalQuality TQThreshold="20" TimeOn="2" TimeOff="2" TimeIgnore="0" EdgeDetectorThreshold="60" ReferenceSaveInterval="24" ReferenceUpdateInterval="300" ReferenceUpdateLearningRate="2" BackgroundUpdateInterval="1" BackgroundUpdateLearningRate="15" DebugInfo="0" UseTimings="0">
-            <Display X="1" Y="5" Channel="0"/>
+        <ThermalQuality BackgroundUpdateInterval="1" BackgroundUpdateLearningRate="15" DebugInfo="0" EdgeDetectorThreshold="60" ReferenceSaveInterval="24" ReferenceUpdateInterval="300" ReferenceUpdateLearningRate="2" TQThreshold="20" TimeIgnore="0" TimeOff="2" TimeOn="2" UseTimings="0">
+            <Display Channel="0" X="1" Y="5"/>
         </ThermalQuality>
-        <EventManager SendIntegrationData="0" SendImageData="0" DataIntegrationInterval="60" ImageIntegrationInterval="1440"/>
+        <EventManager DataIntegrationInterval="60" ImageIntegrationInterval="1440" SendImageData="0" SendIntegrationData="0"/>
     </ThermalQuality>
-    <TiltSensorCalibration ParamsVersion="1" CameraHeight="2.10" CameraModel="ThermiCam2 390">
-        <Parameters Force="0" TiltAngle="34.330200" PanAngle="30.000000" RollAngle="0.000000" CcdWidth="0.010819" CcdHeight="0.008702" FocalDistance="7.500000"/>
+    <TiltSensorCalibration CameraHeight="2.10" CameraModel="ThermiCam2 390" ParamsVersion="1">
+        <Parameters Force="0" TiltAngle="34.071602" PanAngle="30.000000" RollAngle="-1.660280" CcdWidth="0.010819" CcdHeight="0.008702" FocalDistance="7.500000"/>
         <Corrections TiltAngle="0.000000"/>
     </TiltSensorCalibration>
     <WorldUtilities>

@@ -1,4 +1,3 @@
-import websocket
 import logging
 import json
 import config
@@ -7,19 +6,51 @@ import asyncio
 import websockets
 
 logger = logging.getLogger('detectie')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
 
-async def showShape(shape: config.Polygon):
-    global detectionShapes, lock
+class DetectionFrame(object):
+    def __init__(self, baseID: int, numDetections: int, maxNumDetections: int):
+        super().__init__()
+        self.baseID = baseID
+        self.numDetections = numDetections
+        self.detections = []
+
+    @property
+    def baseID(self):
+        return self._baseID
+
+    @baseID.setter
+    def baseID(self, b):
+        self._baseID = b
+
+    @property
+    def numDetections(self):
+        return self._numDetections
+
+    @numDetections.setter
+    def numDetections(self, n):
+        self._numDetections = n
+
+
+async def showShape(shape):
+    global detectionShapes, lock, detectionUsers
     async with lock:
-        detectionShapes.append(shape)
+        if isinstance(shape, list):
+            detectionShapes.extend(shape)
+        else:
+            detectionShapes.append(shape)
         logger.debug(f"Detection IDs: {[x.objectId for x in detectionShapes]}")
+        message = json.dumps([shape.toJSON() for shape in detectionShapes])
+        try:
+            await asyncio.wait([user.send(message) for user in detectionUsers])
+        except ValueError as e:
+            logger.debug(f"No clients registered for detection.")
 
 
-async def removeShape(objectId: dict):
-    global detectionShapes, lock
+async def removeShape(objectId: dict, redraw:bool = True):
+    global detectionShapes, lock, detectionUsers
     async with lock:
         if "id" not in objectId.keys():
             detectionShapes = [
@@ -29,13 +60,21 @@ async def removeShape(objectId: dict):
                                != objectId["type"] or detection.objectId["id"] != objectId["id"]]
 
         logger.debug(f"Detection IDs: {[x.objectId for x in detectionShapes]}")
+        message = json.dumps([shape.toJSON() for shape in detectionShapes])
+        if redraw:
+            try:
+                await asyncio.wait([user.send(message) for user in detectionUsers])
+            except ValueError as e:
+                logger.debug(f"No clients registered for detection.")
 
 
 async def main():
+    global start_server
     canWebsocketFuture = asyncio.ensure_future(canWebsocket())
-    irWebsocketFuture = asyncio.ensure_future(irWebsocket())
+    # irWebsocketFuture = asyncio.ensure_future(irWebsocket())
+    # websocketFuture = asyncio.ensure_future(start_server)
 
-    done, pending = await asyncio.wait([canWebsocketFuture, irWebsocketFuture], return_when=asyncio.FIRST_COMPLETED)
+    done, pending = await asyncio.wait([canWebsocketFuture], return_when=asyncio.FIRST_COMPLETED)
 
     for task in pending:
         task.cancel()
@@ -77,6 +116,7 @@ async def irWebsocket():
 async def canWebsocket():
     global frameIDs, segmentIDs, lidars
     uri = "ws://192.168.1.58:8765"
+    detectionFrame = None
     async with websockets.connect(uri) as ws:
         while True:
             message = await ws.recv()
@@ -86,8 +126,10 @@ async def canWebsocket():
             if jsonMessage["arbitration_id"] in frameIDs:
                 # Frame message
                 numDetections = int.from_bytes(dataBytes[0:1], 'little')
+                detectionFrame = DetectionFrame(
+                    jsonMessage["arbitration_id"]-1, numDetections, 8)
                 objectId = {"type": str(jsonMessage["arbitration_id"]-1)}
-                await removeShape(objectId)
+                await removeShape(objectId, False)
             elif jsonMessage["arbitration_id"] in segmentIDs:
                 # Segment message
                 # distance
@@ -100,10 +142,48 @@ async def canWebsocket():
                     for lidar in lidars:
                         if lidar.baseFrameIdTx == jsonMessage["arbitration_id"]-2:
                             polygonSpace = lidar.beamToCartesian(
-                                channel, distance)
+                                channel, distance/100)
                             polygonSpace.objectId = {"type": str(
                                 lidar.baseFrameIdTx), "id": channel}
-                            await showShape(polygonSpace)
+                            if detectionFrame is not None:
+                                detectionFrame.detections.append(polygonSpace)
+                else: 
+                    if detectionFrame is not None:
+                        detectionFrame.detections.append(None)
+                if detectionFrame is not None:
+                    if detectionFrame.numDetections == len(detectionFrame.detections):
+                        await showShape([detection for detection in detectionFrame.detections if detection is not None])
+
+
+async def register(websocket):
+    global detectionUsers
+    detectionUsers.add(websocket)
+    # await notify_users()
+
+
+async def unregister(websocket):
+    global detectionUsers
+    try:
+        detectionUsers.remove(websocket)
+    except Exception:
+        pass
+    # await notify_users()
+
+
+async def handler(websocket, path):
+    global brug
+    await websocket.send(json.dumps([brug.toJSON()]))
+    try:
+        async for message in websocket:
+            data = json.loads(message)
+            if data["action"] == "register":
+                await register(websocket)
+            elif data["action"] == "unregister":
+                await unregister(websocket)
+            else:
+                logging.error(f"unsupported event: {data}")
+    finally:
+        await unregister(websocket)
 
 if __name__ == "__main__":
     logger.info(f"Start config...")
@@ -147,5 +227,14 @@ if __name__ == "__main__":
     detectionShapes = []
     lock = asyncio.Lock()
 
+    detectionUsers = set()
+
+    start_server = websockets.serve(handler, "0.0.0.0", 6789)
+
+    canWebsocketFuture = asyncio.ensure_future(canWebsocket())
+    irWebsocketFuture = asyncio.ensure_future(irWebsocket())
+
     logger.info(f"Start program...")
-    asyncio.get_event_loop().run_until_complete(main())
+    # asyncio.get_event_loop().run_until_complete(main())
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
