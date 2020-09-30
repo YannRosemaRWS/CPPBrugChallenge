@@ -17,6 +17,10 @@
         </Codec>
     </Codec>
     <General ParamsVersion="1" DefaultGateway="1" SubnetMask="1" Locale="EU" TemperatureThreshold="60.0">
+        <Characteristics>
+            <Characteristic Name="x" Value="0"/>
+            <Characteristic Name="y" Value="0"/>
+        </Characteristics>
         <CameraName Value="10-7430 S/N:425759">
             <Display X="21" Y="1" Channel="1" Id="1"/>
         </CameraName>

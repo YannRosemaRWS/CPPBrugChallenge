@@ -270,6 +270,18 @@ def parseIRData(configFile: str, frameSize: tuple):
     CcdWidth = float(Parameters.get('CcdWidth'))
     CcdHeight = float(Parameters.get('CcdHeight'))
     FocalDistance = float(Parameters.get('FocalDistance'))
+    General = root.find('General')
+    try:
+        Characteristics = General.find('Characteristics')
+        for Characteristic in Characteristics:
+            Name = Characteristic.get('Name')
+            Value = Characteristic.get('Value')
+            if Name == 'x':
+                x_pos = float(Value)
+            elif Name == 'y':
+                y_pos = float(Value)
+    except Exception as e:
+        raise DataParseError('IR', f"No x, y characteristics.")
     # Create camera object
     cam = ct.Camera(ct.RectilinearProjection(focallength_mm=FocalDistance,
                                         sensor_width_mm=CcdWidth*1000,
@@ -280,8 +292,8 @@ def parseIRData(configFile: str, frameSize: tuple):
                                     tilt_deg=90.0-TiltAngle,
                                     roll_deg=RollAngle,
                                     heading_deg=PanAngle,
-                                    pos_x_m=None,
-                                    pos_y_m=None))
+                                    pos_x_m=x_pos,
+                                    pos_y_m=y_pos))
     # Get unique camera name
     cameraName = root.find('General').find('CameraName').get('Value')
     # Create IRCamera object
