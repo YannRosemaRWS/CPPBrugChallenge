@@ -2,7 +2,7 @@
     <MetaData Name="Default"/>
     <General GPSPosition="" Locale="EU" OverlayText="" ParamsVersion="1" Snmp="" TemperatureThreshold="60.0">
         <Characteristics>
-            <Characteristic Name="x" Value="0"/>
+            <Characteristic Name="x" Value="10.3"/>
             <Characteristic Name="y" Value="0"/>
         </Characteristics>
         <CameraName Value="10-7430 S/N:425759">
@@ -81,16 +81,52 @@
     <PedestrianPresence>
         <PedestrianPresence EnableTemplateSuppressor="1" FastRemoveOnBorderThreshold="7" MaxNumEmptyUpdates="10" MaxTimeStoppedUpdates="400" NoStoppedObjectAgainstMaskingZone="0" SendTrackingData="0" SensitivityLevel="Ultra" ShowDetection="1" ShowGPSData="0" UseDebugInfo="0" UseDebugZoneCounting="0" UseLimitedDebugInfo="0" UseTimings="0">
             <Zones>
-                <Zone Angle="119" Delay="0.0" Direction="3" Extend="0.0" ZoneId="1" ZoneName="" ZoneType="0">
+                <Zone Angle="119" Delay="0.0" Direction="0" Extend="0.0" ZoneId="1" ZoneName="" ZoneType="0">
                     <Shape Type="ARROWDIRECTION">
-                        <Point X="41" Y="49"/>
-                        <Point X="87" Y="33"/>
-                        <Point X="181" Y="244"/>
-                        <Point X="119" Y="269"/>
+                        <Point X="260" Y="42"/>
+                        <Point X="308" Y="58"/>
+                        <Point X="127" Y="290"/>
+                        <Point X="50" Y="197"/>
                     </Shape>
-                    <DetectionMode Humans="1" ObjectsOfInterest="1" Vehicles="0"/>
+                    <DetectionMode Humans="1" ObjectsOfInterest="1" Vehicles="1"/>
                     <Direction ApproachAngle="90" MaxSpeed="5.0"/>
                     <Waiting TimeOut="1.0" WaitingAreaWidth="0.5"/>
+                    <ZoneOccupancy Threshold1="25" Threshold2="50" Threshold3="75" UseOccupancy="0"/>
+                </Zone>
+                <Zone Angle="90" Delay="0.0" Direction="0" Extend="0.0" ZoneId="2" ZoneName="" ZoneType="0">
+                    <Shape Type="ARROWDIRECTION">
+                        <Point X="9" Y="144"/>
+                        <Point X="89" Y="89"/>
+                        <Point X="137" Y="112"/>
+                        <Point X="47" Y="179"/>
+                    </Shape>
+                    <DetectionMode Humans="1" ObjectsOfInterest="1" Vehicles="1"/>
+                    <Direction ApproachAngle="90" MaxSpeed="5.0"/>
+                    <Waiting TimeOut="2.0" WaitingAreaWidth="0.5"/>
+                    <ZoneOccupancy Threshold1="25" Threshold2="50" Threshold3="75" UseOccupancy="0"/>
+                </Zone>
+                <Zone Angle="90" Delay="0.0" Direction="0" Extend="0.0" ZoneId="3" ZoneName="" ZoneType="0">
+                    <Shape Type="ARROWDIRECTION">
+                        <Point X="93" Y="85"/>
+                        <Point X="164" Y="47"/>
+                        <Point X="213" Y="63"/>
+                        <Point X="142" Y="108"/>
+                    </Shape>
+                    <DetectionMode Humans="1" ObjectsOfInterest="1" Vehicles="1"/>
+                    <Direction ApproachAngle="90" MaxSpeed="5.0"/>
+                    <Waiting TimeOut="2.0" WaitingAreaWidth="0.5"/>
+                    <ZoneOccupancy Threshold1="25" Threshold2="50" Threshold3="75" UseOccupancy="0"/>
+                </Zone>
+                <Zone Angle="90" Delay="0.0" Direction="0" Extend="0.0" ZoneId="4" ZoneName="" ZoneType="0">
+                    <Shape Type="ARROWDIRECTION">
+                        <Point X="169" Y="44"/>
+                        <Point X="216" Y="27"/>
+                        <Point X="254" Y="39"/>
+                        <Point X="215" Y="61"/>
+                    </Shape>
+                    <DetectionMode Humans="1" ObjectsOfInterest="1" Vehicles="1"/>
+                    <Direction ApproachAngle="90" MaxSpeed="5.0"/>
+                    <Waiting TimeOut="2.0" WaitingAreaWidth="0.5"/>
                     <ZoneOccupancy Threshold1="25" Threshold2="50" Threshold3="75" UseOccupancy="0"/>
                 </Zone>
             </Zones>
@@ -158,8 +194,8 @@
         </ThermalQuality>
         <EventManager DataIntegrationInterval="60" ImageIntegrationInterval="1440" SendImageData="0" SendIntegrationData="0"/>
     </ThermalQuality>
-    <TiltSensorCalibration CameraHeight="2.10" CameraModel="ThermiCam2 390" ParamsVersion="1">
-        <Parameters Force="0" TiltAngle="34.840900" PanAngle="30.000000" RollAngle="-0.280859" CcdWidth="0.010819" CcdHeight="0.008702" FocalDistance="7.500000"/>
+    <TiltSensorCalibration CameraHeight="6.50" CameraModel="ThermiCam2 390" ParamsVersion="1">
+        <Parameters Force="0" TiltAngle="43.683102" PanAngle="318.000000" RollAngle="-0.321883" CcdWidth="0.010819" CcdHeight="0.008702" FocalDistance="7.500000"/>
         <Corrections TiltAngle="0.000000"/>
     </TiltSensorCalibration>
     <WorldUtilities>

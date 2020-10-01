@@ -57,8 +57,17 @@ async def removeShape(objectId: dict, redraw:bool = True):
             detectionShapes = [
                 detection for detection in detectionShapes if detection.objectId["type"] != objectId["type"]]
         else:
-            detectionShapes = [detection for detection in detectionShapes if detection.objectId["type"]
+            hits = [detection for detection in detectionShapes if detection.objectId["type"]
+                               == objectId["type"] and detection.objectId["id"] == objectId["id"]]
+            if len(hits) > 1:
+                detectionShapes = [detection for detection in detectionShapes if detection.objectId["type"]
                                != objectId["type"] or detection.objectId["id"] != objectId["id"]]
+                hits.pop()
+                detectionShapes.extend(hits)
+            else:
+                detectionShapes = [detection for detection in detectionShapes if detection.objectId["type"]
+                                != objectId["type"] or detection.objectId["id"] != objectId["id"]]
+                
 
         logger.debug(f"Detection IDs: {[x.objectId for x in detectionShapes]}")
         message = json.dumps([shape.toJSON() for shape in detectionShapes])
@@ -115,8 +124,8 @@ async def irWebsocket():
 
 async def canWebsocket():
     global frameIDs, segmentIDs, lidars
-    uri = "ws://192.168.1.100:8765"
-    detectionFrame = None
+    uri = "ws://10.0.0.10:8765"
+    detectionFrame = [None]*30
     async with websockets.connect(uri) as ws:
         while True:
             message = await ws.recv()
@@ -126,7 +135,7 @@ async def canWebsocket():
             if jsonMessage["arbitration_id"] in frameIDs:
                 # Frame message
                 numDetections = int.from_bytes(dataBytes[0:1], 'little')
-                detectionFrame = DetectionFrame(
+                detectionFrame[jsonMessage["arbitration_id"]-1 - 1872] = DetectionFrame(
                     jsonMessage["arbitration_id"]-1, numDetections, 8)
                 objectId = {"type": str(jsonMessage["arbitration_id"]-1)}
                 await removeShape(objectId, False)
@@ -145,14 +154,14 @@ async def canWebsocket():
                                 channel, distance/100)
                             polygonSpace.objectId = {"type": str(
                                 lidar.baseFrameIdTx), "id": channel}
-                            if detectionFrame is not None:
-                                detectionFrame.detections.append(polygonSpace)
+                            if detectionFrame[jsonMessage["arbitration_id"]-2 - 1872] is not None:
+                                detectionFrame[jsonMessage["arbitration_id"]-2 - 1872].detections.append(polygonSpace)
                 else: 
-                    if detectionFrame is not None:
-                        detectionFrame.detections.append(None)
-                if detectionFrame is not None:
-                    if detectionFrame.numDetections == len(detectionFrame.detections):
-                        await showShape([detection for detection in detectionFrame.detections if detection is not None])
+                    if detectionFrame[jsonMessage["arbitration_id"]-2 - 1872] is not None:
+                        detectionFrame[jsonMessage["arbitration_id"]-2 - 1872].detections.append(None)
+                if detectionFrame[jsonMessage["arbitration_id"]-2 - 1872] is not None:
+                    if detectionFrame[jsonMessage["arbitration_id"]-2 - 1872].numDetections == len(detectionFrame[jsonMessage["arbitration_id"]-2 - 1872].detections):
+                        await showShape([detection for detection in detectionFrame[jsonMessage["arbitration_id"]-2 - 1872].detections if detection is not None])
 
 
 async def register(websocket):
